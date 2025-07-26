@@ -1,0 +1,23 @@
+pipeline {
+  agent any
+  stage {
+    stage('Build & Test') {
+      parallel {
+        stage('Java Build') {
+          steps { sh 'mvn package' }
+        }
+        stage('Frontend Build') {
+          steps { sh 'npm run build' }
+        }
+      }
+    }
+    stage('Deploy') {
+      when {
+        branch 'main'
+      }
+      steps {
+        sh './deploy.sh'
+      }
+    }
+  }
+}
