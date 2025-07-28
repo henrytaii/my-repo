@@ -1,7 +1,7 @@
 pipeline {
   agent any
 
-  enviroment {
+  environment {
     VENV_DIR = '.venv' // thư mục chứa virtualenv
   }
 
@@ -23,7 +23,16 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Run Tests') {
+      steps {
+       sh '''
+         source ${VENV_DIR}/bin/activate
+         pytest tests/
+       '''
+     }
+   }
+
+   stage('Deploy') {
       when {
         branch 'main'
       }
